@@ -12,14 +12,23 @@ MODEL = "gemini-3.6-flash"
 
 
 def ask_ai(prompt):
-    response = client.models.generate_content(
-        model=MODEL,
-        contents=prompt
-    )
-    return response.text
+
+    try:
+
+        response = client.models.generate_content(
+            model=MODEL,
+            contents=prompt
+        )
+
+        return response.text
+
+    except Exception:
+
+        return "⚠️ Gemini rate limit reached. Please wait 30 seconds and try again."
 
 
 def evaluate_answer(question, answer):
+
     prompt = f"""
 You are a senior technical interviewer.
 
@@ -29,9 +38,9 @@ Question:
 Candidate Answer:
 {answer}
 
-Evaluate the answer honestly.
+Evaluate the answer.
 
-Return in this format:
+Return ONLY in this format:
 
 Score: X/10
 
@@ -48,12 +57,18 @@ Improvement Tips:
 - ...
 """
 
-    response = client.models.generate_content(
-        model=MODEL,
-        contents=prompt
-    )
+    try:
 
-    return response.text
+        response = client.models.generate_content(
+            model=MODEL,
+            contents=prompt
+        )
+
+        return response.text
+
+    except Exception:
+
+        return "⚠️ Gemini rate limit reached. Please wait 30 seconds and try again."
 
 def analyze_resume(resume_text):
 
@@ -74,13 +89,17 @@ Frameworks:
 Databases:
 Tools:
 Experience:
-
-Keep the response clean and well formatted.
 """
 
-    response = client.models.generate_content(
-        model=MODEL,
-        contents=prompt
-    )
+    try:
 
-    return response.text
+        response = client.models.generate_content(
+            model=MODEL,
+            contents=prompt
+        )
+
+        return response.text
+
+    except Exception:
+
+        return "⚠️ Resume analysis failed because the Gemini API rate limit was reached. Please wait 30 seconds and upload the resume again."

@@ -31,6 +31,9 @@ if "current_question" not in st.session_state:
 if "resume_summary" not in st.session_state:
     st.session_state.resume_summary = ""
 
+if "feedback" not in st.session_state:
+    st.session_state.feedback = ""
+    
 # ---------------- Inputs ---------------- #
 
 role = st.selectbox(
@@ -162,20 +165,25 @@ if st.session_state.started:
 
             with st.spinner("Evaluating..."):
 
-                feedback = evaluate_answer(
-                    st.session_state.current_question,
-                    answer
-                )
+                st.session_state.feedback = evaluate_answer(
+    st.session_state.current_question,
+    answer
+)
 
-            st.subheader("📊 AI Feedback")
-
-            st.write(feedback)
+    st.subheader("📊 AI Feedback")
+    st.write(st.session_state.feedback)
+    
+    if st.session_state.feedback != "":
+      st.subheader("📊 AI Feedback")
+      st.write(st.session_state.feedback)
 
     # -------- Next Question -------- #
 
     if st.session_state.question_no < total_questions:
 
         if st.button("➡️ Next Question"):
+            
+            st.session_state.feedback = ""
 
             st.session_state.question_no += 1
 
