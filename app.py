@@ -34,6 +34,9 @@ if "resume_summary" not in st.session_state:
 if "feedback" not in st.session_state:
     st.session_state.feedback = ""
     
+if "resume_text" not in st.session_state:
+    st.session_state.resume_text = ""
+    
 # ---------------- Inputs ---------------- #
 
 role = st.selectbox(
@@ -70,25 +73,29 @@ resume_text = ""
 
 if uploaded_resume is not None:
 
+    if st.session_state.resume_summary == "":
+        try:
+          st.session_state.resume_text = extract_text_from_pdf(uploaded_resume)
+
+          with st.spinner("Analyzing resume..."):
+            st.session_state.resume_summary = analyze_resume(
+                st.session_state.resume_text
+        )
+          st.success("✅ Resume uploaded and analyzed successfully!")
+  
+        except Exception as e:
+         st.error(f"Could not read the uploaded PDF: {e}")
+            
+    st.subheader("📋 Resume Analysis")
+    st.write(st.session_state.resume_summary)
     
 
-    if st.session_state.resume_summary == "":
-
-        resume_text = extract_text_from_pdf(uploaded_resume)
-
-        with st.spinner("Analyzing resume..."):
-            st.session_state.resume_summary = analyze_resume(resume_text)
-
-    st.subheader("📋 Resume Analysis")
-    st.write(st.session_state.resume_summary)
-    st.subheader("📋 Resume Analysis")
-
-    st.write(st.session_state.resume_summary)
+    
     st.success("✅ Resume uploaded successfully!")
 
     with st.expander("View Extracted Resume Text"):
 
-        st.text(resume_text)
+        st.text(st.session_state.resume_text)
         
 # ---------------- Generate Question ---------------- #
 
@@ -166,9 +173,9 @@ if st.session_state.started:
             with st.spinner("Evaluating..."):
 
                 st.session_state.feedback = evaluate_answer(
-    st.session_state.current_question,
-    answer
-)
+                       st.session_state.current_question,
+                           answer
+                )
 
     st.subheader("📊 AI Feedback")
     st.write(st.session_state.feedback)

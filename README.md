@@ -97,7 +97,7 @@ streamlit run app.py
 ## 🤖 AI Model
 
 - **Provider:** Google Gemini API
-- **Model:** Gemini 3.6 Flash
+- **Model:** Gemini 3.5 Flash-lite
 
 ---
 
