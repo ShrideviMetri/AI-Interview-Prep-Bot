@@ -1,6 +1,11 @@
-import streamlit as st
-from modules.ai_interviewer import ask_ai, evaluate_answer
 
+import streamlit as st
+from modules.ai_interviewer import (
+    ask_ai, 
+    evaluate_answer,
+    analyze_resume
+)
+from modules.pdf_reader import extract_text_from_pdf
 # ---------------- Page Config ---------------- #
 
 st.set_page_config(
@@ -22,6 +27,9 @@ if "question_no" not in st.session_state:
 
 if "current_question" not in st.session_state:
     st.session_state.current_question = ""
+    
+if "resume_summary" not in st.session_state:
+    st.session_state.resume_summary = ""
 
 # ---------------- Inputs ---------------- #
 
@@ -48,11 +56,41 @@ total_questions = st.selectbox(
     [5, 10, 15]
 )
 
+st.divider()
+
+uploaded_resume = st.file_uploader(
+    "📄 Upload Your Resume (PDF)",
+    type=["pdf"]
+)
+
+resume_text = ""
+
+if uploaded_resume is not None:
+
+    
+
+    if st.session_state.resume_summary == "":
+
+        resume_text = extract_text_from_pdf(uploaded_resume)
+
+        with st.spinner("Analyzing resume..."):
+            st.session_state.resume_summary = analyze_resume(resume_text)
+
+    st.subheader("📋 Resume Analysis")
+    st.write(st.session_state.resume_summary)
+    st.subheader("📋 Resume Analysis")
+
+    st.write(st.session_state.resume_summary)
+    st.success("✅ Resume uploaded successfully!")
+
+    with st.expander("View Extracted Resume Text"):
+
+        st.text(resume_text)
+        
 # ---------------- Generate Question ---------------- #
 
 def generate_question():
-
-    prompt = f"""
+  prompt = f"""
 You are a senior technical interviewer.
 
 Interview Role:
@@ -64,17 +102,23 @@ Difficulty:
 Question Number:
 {st.session_state.question_no}
 
+Resume Analysis:
+{st.session_state.resume_summary}
+
 Rules:
 
-- Ask ONLY ONE interview question.
-- Do NOT provide hints.
-- Do NOT provide answers.
-- Do NOT explain anything.
-- Keep the question suitable for the selected difficulty.
-- Return only the question.
-"""
+If the resume is provided:
+- Generate ONE interview question based ONLY on the resume.
+- Focus on the candidate's skills, projects, technologies, and experience.
 
-    return ask_ai(prompt)
+If no resume is provided:
+- Generate a normal interview question for the selected role.
+
+Do NOT provide hints.
+Do NOT provide answers.
+Return ONLY the question.
+"""
+  return ask_ai(prompt)
 
 # ---------------- Start Interview ---------------- #
 

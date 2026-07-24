@@ -54,3 +54,33 @@ Improvement Tips:
     )
 
     return response.text
+
+def analyze_resume(resume_text):
+
+    prompt = f"""
+You are an expert technical recruiter.
+
+Analyze the following resume.
+
+Resume:
+{resume_text}
+
+Extract ONLY these sections.
+
+Skills:
+Projects:
+Programming Languages:
+Frameworks:
+Databases:
+Tools:
+Experience:
+
+Keep the response clean and well formatted.
+"""
+
+    response = client.models.generate_content(
+        model=MODEL,
+        contents=prompt
+    )
+
+    return response.text
