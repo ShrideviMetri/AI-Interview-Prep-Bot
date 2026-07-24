@@ -1,34 +1,25 @@
-from openai import OpenAI
+import os
+from dotenv import load_dotenv
+from google import genai
 
-# Connect to local Ollama server
-client = OpenAI(
-    base_url="http://localhost:11434/v1",
-    api_key="ollama"
+load_dotenv()
+
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
 )
 
-MODEL = "llama3.2"
+MODEL = "gemini-3.6-flash"
 
 
 def ask_ai(prompt):
-    response = client.chat.completions.create(
+    response = client.models.generate_content(
         model=MODEL,
-        messages=[
-            {
-                "role": "system",
-                "content": "You are a professional technical interviewer."
-            },
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ]
+        contents=prompt
     )
-
-    return response.choices[0].message.content
+    return response.text
 
 
 def evaluate_answer(question, answer):
-
     prompt = f"""
 You are a senior technical interviewer.
 
@@ -38,9 +29,9 @@ Question:
 Candidate Answer:
 {answer}
 
-Evaluate the answer.
+Evaluate the answer honestly.
 
-Return ONLY in this format:
+Return in this format:
 
 Score: X/10
 
@@ -57,18 +48,9 @@ Improvement Tips:
 - ...
 """
 
-    response = client.chat.completions.create(
+    response = client.models.generate_content(
         model=MODEL,
-        messages=[
-            {
-                "role": "system",
-                "content": "You are an expert interviewer."
-            },
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ]
+        contents=prompt
     )
 
-    return response.choices[0].message.content
+    return response.text
