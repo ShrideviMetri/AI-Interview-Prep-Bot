@@ -1,129 +1,135 @@
 # 🤖 AI Interview Prep Bot
 
-An AI-powered Interview Preparation Bot built using **Python**, **Streamlit**, and the **Google Gemini API**. The application generates role-specific interview questions, evaluates user answers with detailed AI feedback, and creates personalized interview questions based on an uploaded resume.
+An AI-powered interview preparation application that helps candidates practice technical interviews, receive feedback on their answers, and prepare using their own resumes.
 
----
+## ✨ Features
 
-## 🚀 Features
-
-- 🤖 AI-generated interview questions
-- 📄 Resume upload (PDF)
-- 🧠 AI-powered resume analysis
-- 🎯 Resume-based interview questions
-- 💼 Multiple job roles
-- 📊 Difficulty selection (Easy, Medium, Hard)
-- 🔢 Configurable number of interview questions
-- ✅ AI-powered answer evaluation
-- 💡 Detailed feedback with strengths, weaknesses, ideal answers, and improvement tips
-- 🌐 Interactive Streamlit web interface
-
----
+- **AI Interview Questions:** Generates interview questions based on the selected job role and difficulty.
+- **Resume-Based Interviews:** Upload your resume in PDF format to generate questions based on your skills, projects, technologies, and experience.
+- **Answer Evaluation:** Evaluates your answers and provides scores, strengths, weaknesses, ideal answers, and improvement tips.
+- **Multiple Difficulty Levels:** Practice Easy, Medium, and Hard questions.
+- **Customizable Interviews:** Choose the number of interview questions.
+- **Duplicate Question Prevention:** Tracks previously asked questions to reduce repetition.
+- **AI Provider Fallback:** Uses Google Gemini as the primary AI provider and automatically switches to local Ollama when Gemini reaches its rate limit or encounters temporary server/network errors.
+- **Local AI Support:** Uses the Llama 3.2 model through Ollama.
 
 ## 🛠️ Tech Stack
 
-- Python
-- Streamlit
-- Google Gemini API
-- Google GenAI SDK
-- PyMuPDF
-- Gemini 3.6 Flash
+| Technology | Purpose |
+|---|---|
+| Python | Backend programming |
+| Streamlit | User interface |
+| Google Gemini API | Primary AI model |
+| Ollama (Llama 3.2) | Local AI fallback |
+| PyMuPDF | PDF text extraction |
+| Requests | HTTP communication |
+| Python-dotenv | Environment variable management |
 
----
-
-## 📂 Project Structure
+## 📁 Project Structure
 
 ```text
-INTERVIEW_PREP_BOT/
+AI-Interview-Prep-Bot/
 │
-├── app.py
-├── requirements.txt
-├── README.md
-├── .env
 ├── modules/
+│   ├── __init__.py
 │   ├── ai_interviewer.py
 │   └── pdf_reader.py
-└── assets/
+│
+├── uploads/
+├── app.py
+├── requirements.txt
+├── .env
+├── .gitignore
+└── README.md
 ```
 
----
+## ⚙️ Installation and Setup
 
-## ⚙️ Installation
-
-### Clone the repository
+### 1. Clone the repository
 
 ```bash
-git clone https://github.com/ShrideviMetri/AI-Interview-Prep-Bot.git
+git clone YOUR_GITHUB_REPOSITORY_URL
 cd AI-Interview-Prep-Bot
 ```
 
-### Create a virtual environment
+### 2. Create a virtual environment
 
 ```bash
 python -m venv venv
 ```
 
-### Activate the virtual environment (Windows)
+### 3. Activate the virtual environment
+
+**Windows:**
 
 ```bash
 venv\Scripts\activate
 ```
 
-### Install dependencies
+### 4. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Create a `.env` file
+### 5. Configure environment variables
+
+Create a `.env` file in the project root:
 
 ```env
-GEMINI_API_KEY=YOUR_GEMINI_API_KEY
+GEMINI_API_KEY=your_gemini_api_key
+OLLAMA_URL=http://localhost:11434/api/generate
+OLLAMA_MODEL=llama3.2:latest
 ```
 
-### Get a Gemini API Key
+Replace the Gemini API key placeholder with your own key.
 
-Generate a free API key from Google AI Studio:
+### 6. Set up Ollama
 
-https://aistudio.google.com/apikey
+- Install Ollama from https://ollama.com/
+- Pull the Llama 3.2 model:
 
-### Run the application
+```bash
+ollama pull llama3.2:latest
+```
+
+- Make sure Ollama is running locally.
+
+### 7. Run the application
 
 ```bash
 streamlit run app.py
 ```
 
----
+The application will open in your browser.
 
-## 🤖 AI Model
+## 🔄 AI Fallback Mechanism
 
-- **Provider:** Google Gemini API
-- **Model:** Gemini 3.5 Flash-lite
+The application follows a primary and fallback AI architecture:
 
----
+1. Sends the request to Google Gemini.
+2. Retries once for temporary server or network errors.
+3. If Gemini reaches its rate limit or encounters supported temporary errors, the application switches to Ollama.
+4. Ollama generates the response locally.
 
-## 🌐 Live Demo
+**Note:** Ollama must be installed and running on the same machine as the application for local fallback to work.
 
-Add your deployed Streamlit application URL here.
+## 🔐 Security
 
----
+- Store API keys in the `.env` file.
+- Never upload `.env` to GitHub.
+- Add `.env` and `venv/` to `.gitignore`.
 
-## 📸 Screenshots
+## 🚀 Future Enhancements
 
-_Add screenshots of the application here._
-
----
-
-## 📌 Future Improvements
-
-- 📈 Overall Interview Performance Report
-- 🎙️ Voice-based Interview
-- 📄 Download Interview Report as PDF
-- 📚 Interview History
-- 📊 Performance Dashboard
-- 🔐 User Authentication & Profiles
-
----
+- Interview performance tracking.
+- Interview history and progress dashboard.
+- More AI model integrations.
+- Additional interview categories.
 
 ## 👩‍💻 Author
 
 **Shridevi Metri**
+
+- GitHub: https://github.com/ShrideviMetri
+- LinkedIn: https://www.linkedin.com/in/shridevi-metri-922a46334
